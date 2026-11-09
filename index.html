@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Zona Blue — streetwear original en Armenia, Quindío. Catálogo, promociones y pedidos por WhatsApp. Envíos contraentrega en la ciudad y a nivel nacional."
+    />
+    <meta name="theme-color" content="#050508" />
+    <title>Zona Blue | Streetwear Armenia Quindío</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="assets/cherub-grill.png" type="image/png" />
+  </head>
+  <body>
+    <div class="bg-noise" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--top" aria-hidden="true"></div>
+    <div class="bg-glow bg-glow--mid" aria-hidden="true"></div>
+    <div class="particles" aria-hidden="true">
+      <span class="particle" style="--x:12%;--size:6px;--dur:14s;--delay:0s"></span>
+      <span class="particle" style="--x:28%;--size:4px;--dur:11s;--delay:2.5s"></span>
+      <span class="particle" style="--x:47%;--size:8px;--dur:16s;--delay:1s"></span>
+      <span class="particle" style="--x:63%;--size:5px;--dur:13s;--delay:4s"></span>
+      <span class="particle" style="--x:78%;--size:7px;--dur:18s;--delay:0.5s"></span>
+      <span class="particle" style="--x:88%;--size:4px;--dur:12s;--delay:3s"></span>
+      <span class="particle" style="--x:35%;--size:5px;--dur:15s;--delay:6s"></span>
+      <span class="particle" style="--x:55%;--size:9px;--dur:20s;--delay:8s"></span>
+    </div>
+
+    <div class="app">
+      <header class="nav">
+        <a class="nav__brand" href="#inicio" aria-label="Zona Blue inicio">
+          <img class="nav__mark" src="assets/cherub-grill.png" alt="" />
+          <span class="nav__word chrome-text">ZONA BLUE</span>
+        </a>
+        <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navDrawer" aria-label="Abrir menú">
+          <span></span>
+        </button>
+        <nav class="nav__drawer" id="navDrawer" aria-label="Secciones">
+          <a href="#catalogo">Catálogo</a>
+          <a href="#promos">Promos</a>
+          <a href="#envios">Envíos</a>
+          <a href="#pagos">Pagos</a>
+          <a href="#contacto">Contacto</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" id="inicio">
+          <div class="hero__media" aria-hidden="true">
+            <img src="assets/cherub-grill.png" alt="" class="hero__photo" />
+            <div class="hero__veil"></div>
+          </div>
+          <div class="hero__content">
+            <p class="hero__eyebrow">
+              <span class="sparkle sparkle--sm"></span>
+              Armenia · Quindío · Colombia
+              <span class="sparkle sparkle--sm"></span>
+            </p>
+            <h1 class="hero__brand chrome-text">ZONA BLUE</h1>
+            <p class="hero__line">
+              Marca propia. La mejor grasa del Quindío. Mira el catálogo y pide por WhatsApp.
+            </p>
+            <div class="hero__cta">
+              <a class="btn btn--primary" href="#catalogo">Ver catálogo</a>
+              <a class="btn btn--ghost" href="#contacto" id="heroWa">Hablar por WhatsApp</a>
+            </div>
+            <div class="scroll-hint" aria-hidden="true">
+              <span>Desliza</span>
+              <span class="scroll-hint__bar"></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="catalogo">
+          <div class="section__head reveal">
+            <p class="section__kicker"><span class="sparkle sparkle--sm"></span> Colección</p>
+            <h2 class="section__title chrome-text">CATÁLOGO</h2>
+            <p class="section__sub">Elige tu prenda, mira detalles y pide directo al chat de la tienda.</p>
+          </div>
+
+          <div class="filters" role="tablist" aria-label="Filtrar catálogo" id="filters">
+            <button class="filter-chip is-active" data-filter="all" role="tab" aria-selected="true">Todo</button>
+            <button class="filter-chip" data-filter="camisas" role="tab" aria-selected="false">Camisas</button>
+            <button class="filter-chip" data-filter="pantalones" role="tab" aria-selected="false">Pantalones</button>
+            <button class="filter-chip" data-filter="accesorios" role="tab" aria-selected="false">Accesorios</button>
+            <button class="filter-chip" data-filter="promo" role="tab" aria-selected="false">En promo</button>
+          </div>
+
+          <div class="catalog" id="catalog" aria-live="polite"></div>
+        </section>
+
+        <section class="section" id="promos">
+          <div class="section__head reveal">
+            <p class="section__kicker"><span class="sparkle sparkle--sm"></span> Ofertas</p>
+            <h2 class="section__title chrome-text">PROMOCIONES</h2>
+            <p class="section__sub">Precios de liquidación y drops activos. Pregunta disponibilidad por WhatsApp.</p>
+          </div>
+          <div class="catalog" id="promos-catalog" aria-live="polite"></div>
+        </section>
+
+        <section class="section" id="envios">
+          <div class="section__head reveal">
+            <p class="section__kicker"><span class="sparkle sparkle--sm"></span> Cobertura</p>
+            <h2 class="section__title chrome-text">ENVÍOS</h2>
+            <p class="section__sub">Rápido en la ciudad, seguro a todo el país.</p>
+          </div>
+          <div class="info-grid reveal">
+            <div class="info-block">
+              <h3><span class="info-icon" aria-hidden="true">🏙</span> Armenia</h3>
+              <p>Envíos contraentrega dentro de la ciudad. Coordinamos por WhatsApp hora y punto de entrega.</p>
+            </div>
+            <div class="info-block">
+              <h3><span class="info-icon" aria-hidden="true">🇨🇴</span> Nacional</h3>
+              <p>Envíos a nivel nacional por corresponsal. Te guiamos con el proceso y el seguimiento del pedido.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="pagos">
+          <div class="section__head reveal">
+            <p class="section__kicker"><span class="sparkle sparkle--sm"></span> Cómo pagar</p>
+            <h2 class="section__title chrome-text">MEDIOS DE PAGO</h2>
+            <p class="section__sub">Sin pasarela online: paga fácil y confirma tu pedido en el chat.</p>
+          </div>
+
+          <div class="divider" aria-hidden="true">
+            <span class="divider__line"></span>
+            <span class="sparkle sparkle--sm"></span>
+            <span class="divider__line"></span>
+          </div>
+
+          <div class="pay-list reveal" id="payList">
+            <div class="pay-item">
+              <div>
+                <p class="pay-item__label">Efectivo</p>
+                <p class="pay-item__value">Contraentrega / tienda</p>
+              </div>
+            </div>
+            <div class="pay-item">
+              <div>
+                <p class="pay-item__label">Nequi</p>
+                <p class="pay-item__value" id="nequiValue">3106598295</p>
+              </div>
+              <button class="pay-item__copy" type="button" data-copy="3106598295">Copiar</button>
+            </div>
+            <div class="pay-item">
+              <div>
+                <p class="pay-item__label">Nu — Llave 1</p>
+                <p class="pay-item__value" id="nuValue">1014991618</p>
+              </div>
+              <button class="pay-item__copy" type="button" data-copy="1014991618">Copiar</button>
+            </div>
+            <div class="pay-item">
+              <div>
+                <p class="pay-item__label">Nequi — Llave 2</p>
+                <p class="pay-item__value" id="nequiKeyValue">@3106598295</p>
+              </div>
+              <button class="pay-item__copy" type="button" data-copy="@3106598295">Copiar</button>
+            </div>
+          </div>
+          <p class="pay-holder" id="payHolder">Simon Jacobo Perez</p>
+          <p class="pay-note">Gracias por tu apoyo</p>
+        </section>
+
+        <section class="section contact" id="contacto">
+          <div class="reveal">
+            <p class="contact__city">Armenia, Quindío</p>
+            <h2 class="section__title chrome-text">CONTACTO</h2>
+            <p class="section__sub" style="margin: 0 auto 0.25rem">
+              Atención personalizada por WhatsApp. Cuéntanos talla, color y ciudad.
+            </p>
+            <p class="contact__phone chrome-text" id="contactPhone">316 541 1675</p>
+            <div class="contact__actions">
+              <a class="btn btn--wa" id="waMain" href="#" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                  <path
+                    d="M20.5 3.5A11 11 0 0 0 2.4 17.1L1.5 22.5l5.5-.9A11 11 0 0 0 22 12a10.9 10.9 0 0 0-1.5-8.5zM12 20.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.2.5.5-3.1-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.5c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.3-.7-1.8-.2-.5-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4.5.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3z"
+                  />
+                </svg>
+                Pedir por WhatsApp
+              </a>
+              <a class="btn btn--ghost" href="#catalogo">Volver al catálogo</a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p class="footer__brand chrome-text">ZONA BLUE</p>
+        <p>Marca propia · Armenia, Quindío</p>
+        <p style="margin-top: 0.35rem">© <span id="year"></span> Zona Blue. Todos los derechos reservados.</p>
+      </footer>
+    </div>
+
+    <a
+      class="fab-wa"
+      id="fabWa"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Abrir WhatsApp de Zona Blue"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+        <path
+          d="M20.5 3.5A11 11 0 0 0 2.4 17.1L1.5 22.5l5.5-.9A11 11 0 0 0 22 12a10.9 10.9 0 0 0-1.5-8.5zM12 20.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3.2.5.5-3.1-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.5c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4-.1-.1-.5-1.3-.7-1.8-.2-.5-.4-.4-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2.9 2.3c.1.2 1.6 2.5 3.9 3.4.5.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1-.1-.1-.2-.2-.4-.3z"
+        />
+      </svg>
+    </a>
+
+    <div class="modal" id="productModal" aria-hidden="true">
+      <div class="modal__backdrop" data-close-modal></div>
+      <div
+        class="modal__sheet"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+        tabindex="-1"
+      >
+        <div class="modal__handle" aria-hidden="true"></div>
+        <button class="modal__close" type="button" data-close-modal aria-label="Cerrar">×</button>
+        <div class="modal__media">
+          <img id="modalImage" src="" alt="" />
+        </div>
+        <div class="modal__body">
+          <p class="modal__tag" id="modalTag"></p>
+          <h3 class="modal__title" id="modalTitle"></h3>
+          <div class="modal__prices">
+            <span class="modal__price" id="modalPrice"></span>
+            <span class="modal__old" id="modalOld"></span>
+          </div>
+          <p class="modal__desc" id="modalDesc"></p>
+
+          <p class="modal__label">Talla</p>
+          <div class="option-row" id="modalSizes"></div>
+
+          <p class="modal__label">Color</p>
+          <div class="option-row" id="modalColors"></div>
+
+          <ul class="detail-list" id="modalDetails"></ul>
+
+          <div class="modal__actions">
+            <a class="btn btn--wa btn--full" id="modalWa" href="#" target="_blank" rel="noopener noreferrer">
+              Pedir esta prenda por WhatsApp
+            </a>
+            <button class="btn btn--ghost btn--full" type="button" data-close-modal>Seguir mirando</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
