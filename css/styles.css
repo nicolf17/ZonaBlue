@@ -1868,9 +1868,10 @@ ul {
 .promo-band__veil {
   position: absolute;
   inset: 0;
-  /* Degradado horizontal: alto contraste a la izquierda (texto/botón), boca visible a la derecha */
+  /* Fundido suave: grada desde oscuro a la izquierda hasta transparente a la derecha,
+     sin línea divisoria marcada. La boca a la derecha se mantiene nítida. */
   background:
-    linear-gradient(90deg, rgba(5, 5, 8, 0.92) 0%, rgba(5, 5, 8, 0.72) 45%, rgba(5, 5, 8, 0.12) 100%);
+    linear-gradient(90deg, rgba(5, 5, 8, 0.96) 0%, rgba(5, 5, 8, 0.82) 38%, rgba(5, 5, 8, 0.35) 62%, rgba(5, 5, 8, 0.05) 100%);
 }
 
 @media (max-width: 767px) {
@@ -1881,9 +1882,9 @@ ul {
     object-position: right center;
   }
   .promo-band__veil {
-    /* Móvil: degradado horizontal completo para cobertura total */
+    /* Móvil: mismo fundido suave para mantener legibilidad y integra la boca */
     background:
-      linear-gradient(90deg, rgba(5, 5, 8, 0.92) 0%, rgba(5, 5, 8, 0.72) 45%, rgba(5, 5, 8, 0.12) 100%);
+      linear-gradient(90deg, rgba(5, 5, 8, 0.96) 0%, rgba(5, 5, 8, 0.82) 38%, rgba(5, 5, 8, 0.35) 62%, rgba(5, 5, 8, 0.05) 100%);
   }
 }
 
