@@ -1862,9 +1862,8 @@ ul {
   height: 100%;
   object-fit: contain;
   
-  /* Imagen alineada a la derecha y abajo para que la boca quede completa
-     visible desde el centro del banner hacia la derecha */
-  object-position: right bottom;
+  /* Imagen a fondo completo cover, boca encuadrada hacia la derecha dentro del banner oscuro */
+  object-position: 78% 55%;
 }
 
 .promo-band__veil {
