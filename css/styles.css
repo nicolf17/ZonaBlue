@@ -1861,8 +1861,10 @@ ul {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  /* Imagen alineada a la derecha, con escala contenida para mostrar boca completa */
-  object-position: right center;
+  
+  /* Escala la imagen para mantener la boca completa y la mueve hacia la izquierda
+     para que la boca sea visible desde la mitad del banner hacia la derecha */
+  object-position: 35% center;
 }
 
 .promo-band__veil {
@@ -1876,10 +1878,10 @@ ul {
 
 @media (max-width: 767px) {
   .promo-band__img {
-    /* En móvil: imagen más pequeña a la derecha, sin cortar el texto */
+    /* En móvil: imagen más pequeña, posición ajustada para que la boca se vea desde el centro hacia la derecha */
     max-width: 40%;
     right: 5%;
-    object-position: right center;
+    object-position: 30% center;
   }
   .promo-band__veil {
     /* Móvil: mismo fundido suave para mantener legibilidad y integra la boca */
