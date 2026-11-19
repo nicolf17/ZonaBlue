@@ -8,7 +8,9 @@
       content="Zona Blue — streetwear en Armenia, Quindío. Camisas, buzos, gorras, gafas y bolsos importados. Mira el catálogo y pide por WhatsApp. Envíos contraentrega en la ciudad y a nivel nacional."
     />
     <meta name="theme-color" content="#050508" />
-    <meta property="og:title" content="Zona Blue | Streetwear Armenia Quindío" />
+    <meta property="og:title" content="Zona Blue | Tienda de Ropa" />
+    <meta property="og:site_name" content="Zona Blue" />
+    <meta property="og:locale" content="es_CO" />
     <meta
       property="og:description"
       content="Siempre marca impacto. Catálogo de camisas, buzos, gorras, gafas y bolsos. Pedidos por WhatsApp."
@@ -19,10 +21,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Kaushan+Script&family=Outfit:wght@300;400;500;600;700&display=swap"
+    />
+    <link
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Kaushan+Script&family=Outfit:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
-    <link rel="preload" as="image" href="assets/hero-cherub.jpg" fetchpriority="high" />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Kaushan+Script&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="preload" as="image" href="assets/hero-cherub.webp" fetchpriority="high" />
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="icon" href="assets/logo-zb-mark.png" type="image/png" />
   </head>
@@ -54,7 +69,7 @@
           <a href="#pagos">Pagos</a>
           <a href="#contacto">Contacto</a>
         </nav>
-        <a class="nav__brand" href="#inicio" aria-label="Zona Blue, inicio">
+        <a class="nav__brand" href="#inicio">
           <span class="nav__text">
             <span class="nav__word chrome-text">ZONA BLUE</span>
             <span class="nav__tag">Siempre marca impacto</span>
@@ -115,17 +130,18 @@
               <div class="hero__medallion">
                 <img
                   class="hero__cherub"
-                  src="assets/hero-cherub.jpg"
+                  src="assets/hero-cherub.webp"
                   alt="Querubín cromado con grillz de Zona Blue"
-                  width="1024"
-                  height="1280"
+                  width="900"
+                  height="1125"
                   fetchpriority="high"
+                  decoding="async"
                 />
               </div>
               <span class="hero__badge">Calidad 1.1</span>
-              <img class="hero__float hero__float--1" src="assets/products/canva/p6-1.jpg" alt="" width="120" height="170" aria-hidden="true" />
-              <img class="hero__float hero__float--2" src="assets/products/canva/p7-1.jpg" alt="" width="120" height="170" aria-hidden="true" />
-              <img class="hero__float hero__float--3" src="assets/products/canva/p8-1.jpg" alt="" width="120" height="170" aria-hidden="true" />
+              <img class="hero__float hero__float--1" src="assets/products/canva/p6-1.jpg" alt="" width="120" height="170" aria-hidden="true" decoding="async" fetchpriority="low" />
+              <img class="hero__float hero__float--2" src="assets/products/canva/p7-1.jpg" alt="" width="120" height="170" aria-hidden="true" decoding="async" fetchpriority="low" />
+              <img class="hero__float hero__float--3" src="assets/products/canva/p8-1.jpg" alt="" width="120" height="170" aria-hidden="true" decoding="async" fetchpriority="low" />
               <span class="sparkle sparkle--float hero__spark--1" aria-hidden="true"></span>
               <span class="sparkle sparkle--float hero__spark--2" aria-hidden="true"></span>
               <span class="sparkle sparkle--float hero__spark--3" aria-hidden="true"></span>
@@ -168,15 +184,15 @@
             </p>
           </div>
 
-          <div class="filters" role="tablist" aria-label="Filtrar catálogo" id="filters">
+          <div class="filters" role="group" aria-label="Filtrar catálogo" id="filters">
 
-            <button class="filter-chip is-active" data-filter="camisas" role="tab" aria-selected="true">Camisas</button>
-            <button class="filter-chip" data-filter="polos" role="tab" aria-selected="false">Polos</button>
-            <button class="filter-chip" data-filter="buzos" role="tab" aria-selected="false">Buzos</button>
-            <button class="filter-chip" data-filter="gorras" role="tab" aria-selected="false">Gorras</button>
-            <button class="filter-chip" data-filter="gafas" role="tab" aria-selected="false">Gafas</button>
-            <button class="filter-chip" data-filter="boxers" role="tab" aria-selected="false">Boxers</button>
-            <button class="filter-chip" data-filter="bolsos" role="tab" aria-selected="false">Bolsos</button>
+            <button class="filter-chip is-active" data-filter="camisas" aria-pressed="true">Camisas</button>
+            <button class="filter-chip" data-filter="polos" aria-pressed="false">Polos</button>
+            <button class="filter-chip" data-filter="buzos" aria-pressed="false">Buzos</button>
+            <button class="filter-chip" data-filter="gorras" aria-pressed="false">Gorras</button>
+            <button class="filter-chip" data-filter="gafas" aria-pressed="false">Gafas</button>
+            <button class="filter-chip" data-filter="boxers" aria-pressed="false">Boxers</button>
+            <button class="filter-chip" data-filter="bolsos" aria-pressed="false">Bolsos</button>
           </div>
 
           <p class="catalog__note">
@@ -194,7 +210,8 @@
             </div>
           </div>
 
-          <div class="catalog" id="catalog" aria-live="polite"></div>
+          <div class="catalog" id="catalog"></div>
+          <p class="sr-only" role="status" id="catalogStatus"></p>
           <div class="catalog__more" id="catalogMore" hidden></div>
         </section>
 
@@ -213,7 +230,7 @@
           <div class="promo-band reveal">
             <img
               class="promo-band__img"
-              src="assets/promo-lips.jpg"
+              src="assets/promo-lips.webp"
               alt="Labios con grillz de diamantes, campaña Zona Blue"
               width="900"
               height="1200"
@@ -229,7 +246,8 @@
             </div>
           </div>
 
-          <div class="catalog" id="promos-catalog" aria-live="polite"></div>
+          <div class="catalog" id="promos-catalog"></div>
+          <p class="sr-only" role="status" id="promosStatus"></p>
           <div class="catalog__more" id="promosMore" hidden></div>
         </section>
 
@@ -253,7 +271,7 @@
             </div>
             <img
               class="rosa__img"
-              src="assets/zona-rosa.jpg"
+              src="assets/zona-rosa.webp"
               alt="Línea Zona Rosa: cupidos rosa y azul con corazones"
               width="1024"
               height="1280"
@@ -431,7 +449,7 @@
         <div class="modal__handle" aria-hidden="true"></div>
         <button class="modal__close" type="button" data-close-modal aria-label="Cerrar">×</button>
         <div class="modal__media">
-          <img id="modalImage" alt="" />
+          <img id="modalImage" alt="" width="450" height="800" decoding="async" />
           <span class="modal__swipe" aria-hidden="true">Desliza para ver más</span>
         </div>
         <div class="modal__thumbs" id="modalThumbs" hidden></div>

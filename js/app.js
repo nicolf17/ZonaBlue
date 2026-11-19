@@ -7,6 +7,7 @@
   let selectedSize = null;
   let selectedColor = null;
   let galleryImages = [];
+  let lastFocused = null;
 
   const PAGE_SIZE = 9;
   let catalogExpanded = false;
@@ -75,7 +76,7 @@
     const img = imagesOf(p)[0];
     const priceClass = p.price == null ? "product__price is-quote" : "product__price";
     return `
-    <button type="button" class="product" data-open="${p.id}" style="animation-delay:${i * 35}ms" aria-label="Ver ${p.name}">
+    <button type="button" class="product" data-open="${p.id}" style="animation-delay:${i * 35}ms">
       <div class="product__media">
         ${tag}
         <img src="${img}" alt="${p.name}" width="450" height="800" loading="lazy" decoding="async" style="object-position:${p.imagePos || "center"}" />
@@ -94,17 +95,46 @@
   function bindTilt(container) {
     if (window.matchMedia("(hover: none)").matches) return; // skip touch devices
     container.querySelectorAll(".product").forEach((card) => {
+      let frame = 0;
+      let lastEvent = null;
       card.addEventListener("mousemove", (e) => {
-        const r = card.getBoundingClientRect();
-        const x = ((e.clientX - r.left) / r.width - 0.5) * 2;   // -1 to 1
-        const y = ((e.clientY - r.top)  / r.height - 0.5) * -2; // -1 to 1
-        card.style.transform = `perspective(700px) rotateY(${x * 7}deg) rotateX(${y * 5}deg) scale(1.03)`;
+        lastEvent = e;
+        if (frame) return;
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          if (!lastEvent) return;
+          const r = card.getBoundingClientRect();
+          const x = ((lastEvent.clientX - r.left) / r.width - 0.5) * 2; // -1 to 1
+          const y = ((lastEvent.clientY - r.top) / r.height - 0.5) * -2; // -1 to 1
+          card.style.transform = `perspective(700px) rotateY(${x * 7}deg) rotateX(${y * 5}deg) scale(1.03)`;
+        });
       });
       card.addEventListener("mouseleave", () => {
+        if (frame) cancelAnimationFrame(frame);
+        frame = 0;
+        lastEvent = null;
         card.style.transform = "";
       });
     });
   }
+
+  /* Fallback: evita íconos de imagen rota en conexiones lentas o archivos faltantes */
+  const FALLBACK_IMG =
+    "data:image/svg+xml;charset=utf-8," +
+    encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 800"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0d1424"/><stop offset="1" stop-color="#050508"/></linearGradient></defs><rect width="450" height="800" fill="url(#g)"/><text x="225" y="392" fill="#3d7bff" font-family="Arial,sans-serif" font-size="46" font-weight="bold" text-anchor="middle">ZONA</text><text x="225" y="444" fill="#e8eef8" font-family="Arial,sans-serif" font-size="46" font-weight="bold" text-anchor="middle">BLUE</text><text x="225" y="486" fill="#8ea6c8" font-family="Arial,sans-serif" font-size="17" text-anchor="middle">Foto próximamente</text></svg>`
+    );
+
+  document.addEventListener(
+    "error",
+    (e) => {
+      const img = e.target;
+      if (!img || img.tagName !== "IMG" || img.dataset.fallbackApplied) return;
+      img.dataset.fallbackApplied = "1";
+      img.src = FALLBACK_IMG;
+    },
+    true
+  );
 
   function bindCards(container) {
     container.querySelectorAll("[data-open]").forEach((btn) => {
@@ -137,6 +167,11 @@
       </button>`;
   }
 
+  function announce(id, text) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
   function renderCatalog(reset = false) {
     if (reset) {
       catalogExpanded = false;
@@ -147,6 +182,7 @@
     if (!list.length) {
       catalogEl.innerHTML = `<p class="empty">No hay prendas en esta categoría por ahora. Pregúntanos por WhatsApp.</p>`;
       updateMore(catalogMoreEl, 0, "catalog", false);
+      announce("catalogStatus", "Sin prendas en esta categoría.");
       return;
     }
     const target = catalogExpanded ? list.length : Math.min(PAGE_SIZE, list.length);
@@ -155,6 +191,7 @@
       catalogRendered = target;
     }
     updateMore(catalogMoreEl, list.length, "catalog", catalogExpanded);
+    announce("catalogStatus", `Mostrando ${catalogRendered} de ${list.length} prendas.`);
   }
 
   function renderPromos(reset = false) {
@@ -168,6 +205,7 @@
     if (!list.length) {
       promosCatalogEl.innerHTML = `<p class="empty">No hay promos activas en este momento. ¡Volvemos pronto!</p>`;
       updateMore(promosMoreEl, 0, "promos", false);
+      announce("promosStatus", "Sin promos activas.");
       return;
     }
     const target = promosExpanded ? list.length : Math.min(PAGE_SIZE, list.length);
@@ -176,6 +214,7 @@
       promosRendered = target;
     }
     updateMore(promosMoreEl, list.length, "promos", promosExpanded);
+    announce("promosStatus", `Mostrando ${promosRendered} de ${list.length} promos.`);
   }
 
   function collapseCatalog() {
@@ -233,6 +272,7 @@
   function openModal(id) {
     const product = products.find((p) => p.id === id);
     if (!product) return;
+    lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     selectedProduct = product;
     selectedSize = product.sizes?.[0] || null;
     selectedColor = product.colors?.[0] || null;
@@ -308,12 +348,17 @@
   }
 
   function closeModal() {
+    const wasOpen = modal.classList.contains("is-open");
     modal.classList.remove("is-open");
     modal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
     document.body.style.overscrollBehavior = "";
     selectedProduct = null;
     galleryImages = [];
+    if (wasOpen && lastFocused && document.contains(lastFocused)) {
+      lastFocused.focus({ preventScroll: true });
+    }
+    lastFocused = null;
   }
 
   function showToast(msg) {
@@ -340,7 +385,7 @@
     filtersEl.querySelectorAll(".filter-chip").forEach((chip) => {
       const on = chip === btn;
       chip.classList.toggle("is-active", on);
-      chip.setAttribute("aria-selected", on ? "true" : "false");
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
     });
     renderCatalog(true);
     if (btn.dataset.filter !== "all") {
@@ -428,6 +473,21 @@
   document.addEventListener("keydown", (e) => {
     if (!modal.classList.contains("is-open")) return;
     if (e.key === "Escape") closeModal();
+    if (e.key === "Tab") {
+      const focusables = Array.from(
+        modal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      ).filter((el) => el.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
     if (galleryImages.length > 1 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
       const current = document.getElementById("modalImage").getAttribute("src");
       let idx = galleryImages.indexOf(current);
@@ -435,10 +495,6 @@
       idx = e.key === "ArrowRight" ? (idx + 1) % galleryImages.length : (idx - 1 + galleryImages.length) % galleryImages.length;
       setModalImage(galleryImages[idx]);
     }
-  });
-
-  document.querySelectorAll("[data-copy]").forEach((btn) => {
-    btn.addEventListener("click", () => copyText(btn.dataset.copy));
   });
 
   navToggle?.addEventListener("click", () => {
@@ -514,6 +570,7 @@
     if (btn.dataset.copy === "3106598295") btn.dataset.copy = cfg.payments.nequi;
     if (btn.dataset.copy === "1014991618") btn.dataset.copy = cfg.payments.nu;
     if (btn.dataset.copy === "@3106598295") btn.dataset.copy = cfg.payments.nequiKey;
+    btn.addEventListener("click", () => copyText(btn.dataset.copy));
   });
 
   setWaHrefs();
