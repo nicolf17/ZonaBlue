@@ -1863,7 +1863,7 @@ ul {
   object-fit: contain;
   
   /* Imagen a fondo completo cover, boca encuadrada hacia la derecha dentro del banner oscuro */
-  object-position: 78% 55%;
+  object-position: center center;
 }
 
 .promo-band__veil {
