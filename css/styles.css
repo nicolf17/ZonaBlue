@@ -1860,28 +1860,30 @@ ul {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  /* Baja la imagen 4% para mostrar más boca y menos cabeza/frente */
-  object-position: right 51%;
+  object-fit: contain;
+  /* Imagen alineada a la derecha, con escala contenida para mostrar boca completa */
+  object-position: right center;
 }
 
 .promo-band__veil {
   position: absolute;
   inset: 0;
+  /* Degradado horizontal: alto contraste a la izquierda (texto/botón), boca visible a la derecha */
   background:
-    linear-gradient(90deg, rgba(5, 5, 8, 0.94) 0%, rgba(5, 5, 8, 0.6) 52%, rgba(5, 5, 8, 0.12) 100%),
-    linear-gradient(0deg, rgba(5, 5, 8, 0.85) 0%, transparent 65%);
+    linear-gradient(90deg, rgba(5, 5, 8, 0.92) 0%, rgba(5, 5, 8, 0.72) 45%, rgba(5, 5, 8, 0.12) 100%);
 }
 
 @media (max-width: 767px) {
   .promo-band__img {
-    object-position: right 48%;
+    /* En móvil: imagen más pequeña a la derecha, sin cortar el texto */
+    max-width: 40%;
+    right: 5%;
+    object-position: right center;
   }
   .promo-band__veil {
-    /* En móvil, extender el gradiente un poco más para cubrir el borde derecho */
+    /* Móvil: degradado horizontal completo para cobertura total */
     background:
-      linear-gradient(90deg, rgba(5, 5, 8, 0.94) 0%, rgba(5, 5, 8, 0.6) 52%, rgba(5, 5, 8, 0.12) 100%),
-      linear-gradient(0deg, rgba(5, 5, 8, 0.85) 0%, transparent 70%);
+      linear-gradient(90deg, rgba(5, 5, 8, 0.92) 0%, rgba(5, 5, 8, 0.72) 45%, rgba(5, 5, 8, 0.12) 100%);
   }
 }
 
