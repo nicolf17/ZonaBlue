@@ -1860,7 +1860,7 @@ ul {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   
   /* Imagen a fondo completo cover, boca encuadrada hacia la derecha dentro del banner oscuro */
   object-position: center center;
@@ -1877,10 +1877,8 @@ ul {
 
 @media (max-width: 767px) {
   .promo-band__img {
-    /* En móvil: imagen más pequeña, posición ajustada para que la boca quede completa a la derecha */
-    max-width: 40%;
-    right: 5%;
-    object-position: right bottom;
+    /* Móvil: la imagen llena el banner de extremo a extremo */
+    object-position: center center;
   }
   .promo-band__veil {
     /* Móvil: mismo fundido suave para mantener legibilidad y integra la boca */
