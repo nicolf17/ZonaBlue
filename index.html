@@ -451,6 +451,13 @@
         <div class="modal__media">
           <img id="modalImage" alt="" width="450" height="800" decoding="async" />
           <span class="modal__swipe" aria-hidden="true">Desliza para ver más</span>
+          <button type="button" class="modal__nav modal__nav--prev" data-gallery-prev aria-label="Ver foto anterior">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+          </button>
+          <button type="button" class="modal__nav modal__nav--next" data-gallery-next aria-label="Ver foto siguiente">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+          </button>
+          <span class="modal__count" id="modalCount">1 / 1</span>
         </div>
         <div class="modal__thumbs" id="modalThumbs" hidden></div>
         <div class="modal__body">

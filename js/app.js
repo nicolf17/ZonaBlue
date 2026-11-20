@@ -7,6 +7,7 @@
   let selectedSize = null;
   let selectedColor = null;
   let galleryImages = [];
+  let galleryIndex = 0;
   let lastFocused = null;
 
   const PAGE_SIZE = 9;
@@ -243,11 +244,35 @@
     });
   }
 
+  function updateGalleryChrome() {
+    const countEl = document.getElementById("modalCount");
+    if (countEl) {
+      const visible = galleryImages.length > 1;
+      countEl.classList.toggle("is-hidden", !visible);
+      if (visible) countEl.textContent = `${galleryIndex + 1} / ${galleryImages.length}`;
+    }
+  }
+
+  function goGallery(dir) {
+    if (galleryImages.length < 2) return;
+    const next =
+      (galleryIndex + (dir > 0 ? 1 : -1) + galleryImages.length) % galleryImages.length;
+    setModalImage(galleryImages[next]);
+  }
+
   function setModalImage(src) {
     const img = document.getElementById("modalImage");
+    const idx = galleryImages.indexOf(src);
+    if (idx < 0) return;
+    galleryIndex = idx;
     img.src = src;
     img.style.objectPosition = selectedProduct?.imagePos || "center";
+    /* Crossfade suave al cambiar de toma */
+    img.style.opacity = "0";
+    img.addEventListener("load", () => (img.style.opacity = "1"), { once: true });
+    img.addEventListener("error", () => (img.style.opacity = "1"), { once: true });
     paintThumbs(src);
+    updateGalleryChrome();
   }
 
   function renderThumbs() {
@@ -278,6 +303,7 @@
     selectedSize = product.sizes?.[0] || null;
     selectedColor = product.colors?.[0] || null;
     galleryImages = imagesOf(product);
+    galleryIndex = 0;
 
     const mainImg = document.getElementById("modalImage");
     mainImg.alt = product.name;
@@ -356,6 +382,7 @@
     document.body.style.overscrollBehavior = "";
     selectedProduct = null;
     galleryImages = [];
+    galleryIndex = 0;
     if (wasOpen && lastFocused && document.contains(lastFocused)) {
       lastFocused.focus({ preventScroll: true });
     }
@@ -418,6 +445,13 @@
   modal.addEventListener("click", (e) => {
     if (e.target.closest("[data-close-modal]")) closeModal();
 
+    const navBtn = e.target.closest(".modal__nav");
+    if (navBtn) {
+      e.preventDefault();
+      goGallery(navBtn.classList.contains("modal__nav--prev") ? -1 : 1);
+      return;
+    }
+
     const thumb = e.target.closest(".modal__thumb");
     if (thumb && selectedProduct) {
       setModalImage(thumb.dataset.src);
@@ -462,11 +496,7 @@
       const dx = e.changedTouches[0].clientX - touchStartX;
       touchStartX = null;
       if (Math.abs(dx) < 45) return;
-      const current = document.getElementById("modalImage").getAttribute("src");
-      let idx = galleryImages.indexOf(current);
-      if (idx < 0) idx = 0;
-      idx = dx < 0 ? (idx + 1) % galleryImages.length : (idx - 1 + galleryImages.length) % galleryImages.length;
-      setModalImage(galleryImages[idx]);
+      goGallery(dx < 0 ? 1 : -1);
     },
     { passive: true }
   );
@@ -490,11 +520,7 @@
       }
     }
     if (galleryImages.length > 1 && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
-      const current = document.getElementById("modalImage").getAttribute("src");
-      let idx = galleryImages.indexOf(current);
-      if (idx < 0) idx = 0;
-      idx = e.key === "ArrowRight" ? (idx + 1) % galleryImages.length : (idx - 1 + galleryImages.length) % galleryImages.length;
-      setModalImage(galleryImages[idx]);
+      goGallery(e.key === "ArrowRight" ? 1 : -1);
     }
   });
 
