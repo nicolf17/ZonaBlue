@@ -122,7 +122,7 @@
   // --- Producto from form ---
   function productFromForm() {
     const id = formId.value || slugify(formName.value);
-    const colors = formColors.value.split(","").map(s => s.trim()).filter(Boolean) || ["Unico"];
+    const colors = formColors.value.split(",").map(s => s.trim()).filter(Boolean) || ["Unico"];
     const sizes = formSizes.value.split(","").map(s => s.trim()).filter(Boolean) || ["U"];
     const details = formDetails.value.split(","").map(s => s.trim()).filter(Boolean) || ["Novedad"];
     const images = formImage.value ? [formImage.value] : ["assets/products/canva/p6-1.jpg"];
