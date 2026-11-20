@@ -36,7 +36,6 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--nav-h) + 12px);
   -webkit-text-size-adjust: 100%;
 }
 
