@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Zona Blue — panel de administracion." />
+    <meta name="theme-color" content="#050508" />
+    <title>Zona Blue | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/styles.css?v=20261120" />
+    <link rel="icon" href="/assets/logo-zb-mark.png" type="image/png" />
+  </head>
+  <body>
+    <div class="admin-screen" id="adminRoot">
+      <section class="admin-auth" id="adminAuth">
+        <p class="admin-kicker">ZONA BLUE · PANEL</p>
+        <h1 class="admin-title">Admin</h1>
+        <form id="adminLoginForm" class="admin-form">
+          <label class="admin-field">
+            <span>Usuario</span>
+            <input id="adminUser" type="text" autocomplete="username" required />
+          </label>
+          <label class="admin-field">
+            <span>Clave</span>
+            <input id="adminPass" type="password" autocomplete="current-password" required />
+          </label>
+          <button class="btn btn--wa admin-submit" type="submit">Entrar</button>
+          <p class="admin-error" id="adminError" hidden>Usuario o clave invalidos.</p>
+        </form>
+      </section>
+
+      <section class="admin-panel" id="adminPanel" hidden>
+        <header class="admin-head">
+          <h1 class="admin-title">Panel Zona Blue</h1>
+          <button type="button" class="btn btn--ghost" id="adminLogout">Salir</button>
+        </header>
+
+        <div class="admin-stats" id="adminStats"></div>
+
+        <button type="button" class="btn admin-new" id="adminNew">+ Nuevo producto</button>
+
+        <div class="admin-list" id="adminList"></div>
+
+        <form id="adminEditorForm" class="admin-editor" hidden>
+          <input type="hidden" id="f-id" />
+          <h2 class="admin-editor-title" id="adminEditorTitle">Nuevo producto</h2>
+          <div class="admin-grid">
+            <label class="admin-field">
+              <span>Nombre</span>
+              <input id="f-name" type="text" required />
+            </label>
+            <label class="admin-field">
+              <span>Categoria</span>
+              <input id="f-category" type="text" list="adminCategories" required />
+              <datalist id="adminCategories"></datalist>
+            </label>
+            <label class="admin-field">
+              <span>Precio</span>
+              <input id="f-price" type="text" inputmode="decimal" />
+            </label>
+            <label class="admin-field">
+              <span>Precio anterior</span>
+              <input id="f-oldPrice" type="text" inputmode="decimal" />
+            </label>
+            <label class="admin-field">
+              <span>Tag</span>
+              <input id="f-tag" type="text" placeholder="Promo, Importada, Nuevo..." />
+            </label>
+            <label class="admin-field">
+              <span>Imagen</span>
+              <input id="f-image" type="text" placeholder="assets/products/..." />
+            </label>
+            <label class="admin-field">
+              <span>Posicion de imagen</span>
+              <input id="f-imagePos" type="text" placeholder="center 38%" />
+            </label>
+            <label class="admin-field">
+              <span>Colores (separados por coma)</span>
+              <input id="f-colors" type="text" />
+            </label>
+            <label class="admin-field">
+              <span>Tallas (separadas por coma)</span>
+              <input id="f-sizes" type="text" />
+            </label>
+          </div>
+          <label class="admin-field">
+            <span>Descripcion</span>
+            <textarea id="f-desc" rows="3"></textarea>
+          </label>
+          <label class="admin-field">
+            <span>Detalles (separados por coma)</span>
+            <textarea id="f-details" rows="3"></textarea>
+          </label>
+          <label class="admin-check">
+            <input id="f-promo" type="checkbox" /> Producto en promocion
+          </label>
+          <div class="admin-actions">
+            <button type="button" class="btn" id="adminSave">Guardar</button>
+            <button type="button" class="btn btn--ghost" id="adminCancel">Cancelar</button>
+          </div>
+        </form>
+      </section>
+    </div>
+    <script src="/js/products.js?v=20261120"></script>
+    <script src="/js/admin.js?v=20261120"></script>
+  </body>
+</html>

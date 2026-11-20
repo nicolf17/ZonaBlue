@@ -1,6 +1,15 @@
 (() => {
   const cfg = window.ZB_CONFIG;
   const products = window.ZB_PRODUCTS;
+
+  /* El panel de /admin puede sobrescribir el catalogo desde localStorage */
+  const getProducts = () => {
+    try {
+      const raw = localStorage.getItem("zb_admin_products");
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return window.ZB_PRODUCTS;
+  };
   const QUOTE = "Precio por WhatsApp";
   let activeFilter = "camisas";
   let selectedProduct = null;
@@ -61,9 +70,10 @@
   const imagesOf = (p) => (p.images && p.images.length ? p.images : [p.image]);
 
   function filteredProducts() {
-    if (activeFilter === "all") return products;
-    if (activeFilter === "promo") return products.filter((p) => p.promo);
-    return products.filter((p) => p.category === activeFilter);
+    const list = getProducts();
+    if (activeFilter === "all") return list;
+    if (activeFilter === "promo") return list.filter((p) => p.promo);
+    return list.filter((p) => p.category === activeFilter);
   }
 
   function buildProductCard(p, i) {
@@ -203,7 +213,7 @@
       promosRendered = 0;
       promosCatalogEl.innerHTML = "";
     }
-    const list = products.filter((p) => p.promo);
+    const list = getProducts().filter((p) => p.promo);
     if (!list.length) {
       promosCatalogEl.innerHTML = `<p class="empty">No hay promos activas en este momento. ¡Volvemos pronto!</p>`;
       updateMore(promosMoreEl, 0, "promos", false);
@@ -229,7 +239,7 @@
   }
 
   function collapsePromos() {
-    const list = products.filter((p) => p.promo);
+    const list = getProducts().filter((p) => p.promo);
     Array.from(promosCatalogEl.children).slice(PAGE_SIZE).forEach((node) => node.remove());
     promosRendered = Math.min(PAGE_SIZE, promosRendered);
     promosExpanded = false;
@@ -296,7 +306,7 @@
   }
 
   function openModal(id) {
-    const product = products.find((p) => p.id === id);
+    const product = getProducts().find((p) => p.id === id);
     if (!product) return;
     lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     selectedProduct = product;
