@@ -1961,7 +1961,7 @@ ul {
        blue del labio. */
     left: auto;
     right: 0;
-    width: min(75%, 620px);
+    width: min(74%, 620px);
     object-position: center center;
     -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%);
     mask-image: linear-gradient(90deg, transparent 0, #000 12%);
