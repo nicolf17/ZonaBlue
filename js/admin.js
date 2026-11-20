@@ -1,6 +1,7 @@
 (() => {
   const AUTH_KEY = "zb_admin_auth";
   const DATA_KEY = "zb_admin_products";
+  const CAT_KEY = "zb_admin_categories";
   const ADMIN_USER = "admin";
   const ADMIN_PASS = "zonablue";
 
@@ -158,8 +159,36 @@
     if (isAuthed()) showPanel();
     else showAuth();
     refreshAll();
-    const categories = [...new Set(getProducts().map((p) => p.category).filter(Boolean))];
-    catEl.innerHTML = categories.map((c) => `<option value="${c}"></option>`).join("");
+
+    // Categorías: desde productos + las guardadas en storage
+    const storedCats = JSON.parse(localStorage.getItem(CAT_KEY) || "[]");
+    const productCats = [...new Set(getProducts().map((p) => p.category).filter(Boolean))];
+    const allCats = [...new Set([...storedCats, ...productCats])];
+
+    const catEl = document.getElementById("adminCategories");
+    if (catEl) {
+      catEl.innerHTML = allCats.map((c) => `<option value="${c}"></option>`).join("");
+    }
+
+    // Botón agregar categoría
+    const addCategoryBtn = document.getElementById("addCategory");
+    if (addCategoryBtn) {
+      addCategoryBtn.addEventListener("click", () => {
+        const val = document.getElementById("newCategory").value.trim();
+        if (!val) return;
+        const cats = JSON.parse(localStorage.getItem(CAT_KEY) || "[]");
+        if (!cats.includes(val)) cats.push(val);
+        localStorage.setItem(CAT_KEY, JSON.stringify(cats));
+        // Actualizar DOM al instante
+        if (catEl) {
+          const opt = document.createElement("option");
+          opt.value = val;
+          opt.textContent = val;
+          catEl.appendChild(opt);
+        }
+        document.getElementById("newCategory").value = "";
+      });
+    }
   }
 
   loginForm.addEventListener("submit", (e) => {
