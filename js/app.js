@@ -66,9 +66,10 @@
   }
 
   function buildProductCard(p, i) {
-    const tagClass =
-      p.tag && /hot|liquidación|promo|50%/i.test(p.tag) ? "product__tag--hot" : "";
-    const tag = p.tag ? `<span class="product__tag ${tagClass}">${p.tag}</span>` : "";
+    /* Solo se muestra la etiqueta cuando es de promoción; las demás (Importada, Nuevo, etc.) se ocultan */
+    const isPromoTag = p.tag && /hot|liquidación|promo|50%/i.test(p.tag);
+    const tagClass = isPromoTag ? "product__tag--hot" : "";
+    const tag = isPromoTag ? `<span class="product__tag ${tagClass}">${p.tag}</span>` : "";
     const old =
       p.oldPrice && p.price != null
         ? `<span class="product__old">${money(p.oldPrice)}</span>`

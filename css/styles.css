@@ -1857,13 +1857,19 @@ ul {
 
 .promo-band__img {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: auto;
+  /* La foto ocupa la mayor parte del banner con un poco menos de zoom:
+     la boca queda completa y ligeramente separada del borde derecho. */
+  width: min(76%, 620px);
   height: 100%;
   object-fit: cover;
-  
-  /* Imagen a fondo completo cover, boca encuadrada hacia la derecha dentro del banner oscuro */
   object-position: center center;
+  /* Fundido suave en el borde izquierdo para integrarse con el fondo oscuro */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12%);
 }
 
 .promo-band__veil {
@@ -1876,14 +1882,22 @@ ul {
 }
 
 @media (max-width: 767px) {
-  .promo-band__img {
-    /* Móvil: la imagen llena el banner de extremo a extremo */
-    object-position: center center;
-  }
   .promo-band__veil {
     /* Móvil: mismo fundido suave para mantener legibilidad y integra la boca */
     background:
       linear-gradient(90deg, rgba(5, 5, 8, 0.96) 0%, rgba(5, 5, 8, 0.82) 38%, rgba(5, 5, 8, 0.35) 62%, rgba(5, 5, 8, 0.05) 100%);
+  }
+}
+
+@media (max-width: 600px) {
+  .promo-band__img {
+    /* Pantallas muy angostas: la imagen llena el banner de extremo a extremo */
+    left: 0;
+    right: 0;
+    width: 100%;
+    object-position: center center;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }
 
