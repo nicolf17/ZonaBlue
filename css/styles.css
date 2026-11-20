@@ -1956,13 +1956,15 @@ ul {
 
 @media (max-width: 600px) {
   .promo-band__img {
-    /* Pantallas muy angostas: la imagen llena el banner de extremo a extremo */
-    left: 0;
+    /* Móvil: no se llena de extremo a extremo; se ancla a la derecha con un
+       poco menos de zoom para que la boca quede completa y se distinga la zona
+       blue del labio. */
+    left: auto;
     right: 0;
-    width: 100%;
+    width: min(76%, 620px);
     object-position: center center;
-    -webkit-mask-image: none;
-    mask-image: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 12%);
   }
 }
 
