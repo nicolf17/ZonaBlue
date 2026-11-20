@@ -12,11 +12,12 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/styles.css?v=20261121" />
+    <link rel="stylesheet" href="/css/styles.css?v=20261120" />
     <link rel="icon" href="/assets/logo-zb-mark.png" type="image/png" />
   </head>
   <body>
     <div class="admin-screen" id="adminRoot">
+      <!-- Pantalla de login -->
       <section class="admin-auth" id="adminAuth">
         <p class="admin-kicker">ZONA BLUE · PANEL</p>
         <h1 class="admin-title">Admin</h1>
@@ -34,6 +35,7 @@
         </form>
       </section>
 
+      <!-- Panel principal (oculto hasta login) -->
       <section class="admin-panel" id="adminPanel" hidden>
         <header class="admin-head">
           <h1 class="admin-title">Panel Zona Blue</h1>
@@ -42,73 +44,86 @@
 
         <div class="admin-stats" id="adminStats"></div>
 
-        <button type="button" class="btn admin-new" id="adminNew">+ Nuevo producto</button>
+        <!-- Lista de productos tipo grid automático -->
+        <section class="admin-section" id="adminSection">
+          <h2 class="admin-section-title">Productos</h2>
+          <div class="admin-grid" id="adminList">
+            <!-- Las cards se renderizan acá -->
+          </div>
+        </section>
 
-        <div class="admin-new-category">
-          <input id="newCategory" type="text" placeholder="Nueva categoria (ej. camperas)" />
-          <button type="button" class="btn" id="addCategory">Agregar</button>
+        <!-- Modal para crear/editar producto (sobresale sobre el panel) -->
+        <div id="productModal" class="modal" hidden>
+          <div class="modal__backdrop" data-modal-close></div>
+          <div class="modal__content">
+            <button type="button" class="modal__close" data-modal-close aria-label="Cerrar">×</button>
+            <h2 class="modal__title" id="modalTitle">Nuevo producto</h2>
+            <form id="productForm" class="product-form">
+              <input type="hidden" id="formId" />
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input id="formName" type="text" required />
+                </div>
+                <div class="form-group">
+                  <label>Categoría</label>
+                  <select id="formCategory" required>
+                    <option value="">-- Selecciona categoría --</option>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Precio</label>
+                    <input id="formPrice" type="text" inputmode="decimal" />
+                  </div>
+                  <div class="form-group">
+                    <label>Precio anterior</label>
+                    <input id="formOldPrice" type="text" inputmode="decimal" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Tag</label>
+                  <input id="formTag" type="text" placeholder="Promo, Importada, Nuevo..." />
+                </div>
+                <div class="form-group">
+                  <label>Colores (separados por coma)</label>
+                  <input id="formColors" type="text" />
+                </div>
+                <div class="form-group">
+                  <label>Tallas (separadas por coma)</label>
+                  <input id="formSizes" type="text" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Descripción</label>
+                <textarea id="formDesc" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Detalles (separados por coma)</label>
+                <textarea id="formDetails" rows="3"></textarea>
+              </div>
+              <div class="form-check">
+                <label>
+                  <input type="checkbox" id="formPromo" />
+                  Producto en promoción
+                </label>
+              </div>
+              <div class="form-group">
+                <label>Imagen (URL o dejar vacío para placeholder)</label>
+                <input id="formImage" type="text" placeholder="assets/products/canva/p6-1.jpg" />
+              </div>
+              <div class="form-group">
+                <label>Posición de imagen</label>
+                <input id="formImagePos" type="text" value="center 38%" readonly />
+                <small>Se configura automáticamente; no modificar normalmente.</small>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn" id="formCancel">Cancelar</button>
+                <button type="button" class="btn admin-submit" id="formSave">Guardar</button>
+              </div>
+            </form>
+          </div>
         </div>
-
-        <div class="admin-list" id="adminList"></div>
-
-        <form id="adminEditorForm" class="admin-editor" hidden>
-          <input type="hidden" id="f-id" />
-          <h2 class="admin-editor-title" id="adminEditorTitle">Nuevo producto</h2>
-          <div class="admin-grid">
-            <label class="admin-field">
-              <span>Nombre</span>
-              <input id="f-name" type="text" required />
-            </label>
-            <label class="admin-field">
-              <span>Categoria</span>
-              <input id="f-category" type="text" list="adminCategories" required />
-              <datalist id="adminCategories"></datalist>
-            </label>
-            <label class="admin-field">
-              <span>Precio</span>
-              <input id="f-price" type="text" inputmode="decimal" />
-            </label>
-            <label class="admin-field">
-              <span>Precio anterior</span>
-              <input id="f-oldPrice" type="text" inputmode="decimal" />
-            </label>
-            <label class="admin-field">
-              <span>Tag</span>
-              <input id="f-tag" type="text" placeholder="Promo, Importada, Nuevo..." />
-            </label>
-            <label class="admin-field">
-              <span>Imagen</span>
-              <input id="f-image" type="text" placeholder="assets/products/..." />
-            </label>
-            <label class="admin-field">
-              <span>Posicion de imagen</span>
-              <input id="f-imagePos" type="text" placeholder="center 38%" />
-            </label>
-            <label class="admin-field">
-              <span>Colores (separados por coma)</span>
-              <input id="f-colors" type="text" />
-            </label>
-            <label class="admin-field">
-              <span>Tallas (separadas por coma)</span>
-              <input id="f-sizes" type="text" />
-            </label>
-          </div>
-          <label class="admin-field">
-            <span>Descripcion</span>
-            <textarea id="f-desc" rows="3"></textarea>
-          </label>
-          <label class="admin-field">
-            <span>Detalles (separados por coma)</span>
-            <textarea id="f-details" rows="3"></textarea>
-          </label>
-          <label class="admin-check">
-            <input id="f-promo" type="checkbox" /> Producto en promocion
-          </label>
-          <div class="admin-actions">
-            <button type="button" class="btn" id="adminSave">Guardar</button>
-            <button type="button" class="btn btn--ghost" id="adminCancel">Cancelar</button>
-          </div>
-        </form>
       </section>
     </div>
     <script src="/js/products.js?v=20261120"></script>

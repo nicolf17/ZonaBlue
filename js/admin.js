@@ -5,107 +5,152 @@
   const ADMIN_USER = "admin";
   const ADMIN_PASS = "zonablue";
 
+  // Elementos del DOM
   const authScreen = document.getElementById("adminAuth");
   const panel = document.getElementById("adminPanel");
   const loginForm = document.getElementById("adminLoginForm");
   const adminError = document.getElementById("adminError");
   const statsEl = document.getElementById("adminStats");
-  const listEl = document.getElementById("adminList");
-  const editorForm = document.getElementById("adminEditorForm");
-  const editorTitle = document.getElementById("adminEditorTitle");
-  const logoutBtn = document.getElementById("adminLogout");
-  const saveBtn = document.getElementById("adminSave");
-  const cancelBtn = document.getElementById("adminCancel");
-  const newBtn = document.getElementById("adminNew");
-  const catEl = document.getElementById("adminCategories");
+  const adminSection = document.getElementById("adminSection");
+  const adminList = document.getElementById("adminList");
+  const productModal = document.getElementById("productModal");
+  const productForm = document.getElementById("productForm");
+  const modalTitle = document.getElementById("modalTitle");
+  const formId = document.getElementById("formId");
+  const formName = document.getElementById("formName");
+  const formCategory = document.getElementById("formCategory");
+  const formPrice = document.getElementById("formPrice");
+  const formOldPrice = document.getElementById("formOldPrice");
+  const formTag = document.getElementById("formTag");
+  const formColors = document.getElementById("formColors");
+  const formSizes = document.getElementById("formSizes");
+  const formDesc = document.getElementById("formDesc");
+  const formDetails = document.getElementById("formDetails");
+  const formPromo = document.getElementById("formPromo");
+  const formImage = document.getElementById("formImage");
+  const formImagePos = document.getElementById("formImagePos");
+  const modalClose = productModal.querySelector("[data-modal-close]");
+  const modalBackdrop = productModal.querySelector("[data-modal-close]"); // uso mismo elemento
 
-  const getProducts = () => {
-    try {
-      const raw = localStorage.getItem(DATA_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) {}
-    return window.ZB_PRODUCTS || [];
-  };
-
-  const saveProducts = (list) => localStorage.setItem(DATA_KEY, JSON.stringify(list));
-
+  // --- Auth ---
   const isAuthed = () => localStorage.getItem(AUTH_KEY) === "1";
   const doLogin = (user, pass) => user === ADMIN_USER && pass === ADMIN_PASS;
   const doLogout = () => {
     localStorage.removeItem(AUTH_KEY);
     panel.hidden = true;
     authScreen.hidden = false;
-    editorForm.reset();
-    editorForm.hidden = true;
+    closeModal();
+    resetForm();
   };
 
-  const num = (v) => {
-    const n = parseFloat(String(v == null ? "" : v).replace(/[^0-9.]/g, ""));
-    return Number.isFinite(n) ? n : null;
-  };
+  // --- Modal ---
+  function openModal( product = null ) {
+    productModal.hidden = false;
+    productModal.style.display = "block";
+    modalBackdrop.hidden = false;
+    document.body.style.overflow = "hidden";
 
-  const splitList = (v) =>
-    String(v || "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
+    if ( product ) {
+      // Modo editar
+      modalTitle.textContent = `Editando: ${product.name}`;
+      formId.value = product.id || "";
+      formName.value = product.name || "";
+      formCategory.value = product.category || "";
+      formPrice.value = product.price == null ? "" : String(product.price);
+      formOldPrice.value = product.oldPrice == null ? "" : String(product.oldPrice);
+      formTag.value = product.tag || "";
+      formColors.value = (product.colors || []).join(", ");
+      formSizes.value = (product.sizes || []).join(", ");
+      formDesc.value = product.description || "";
+      formDetails.value = (product.details || []).join(", ");
+      formPromo.checked = !!product.promo;
+      formImage.value = (product.images && product.images[0]) || "";
+      formImagePos.value = product.imagePos || "center 38%";
+    } else {
+      // Modo nuevo
+      modalTitle.textContent = "Nuevo producto";
+      formId.value = "";
+      formName.value = "";
+      formCategory.value = "";
+      formPrice.value = "";
+      formOldPrice.value = "";
+      formTag.value = "";
+      formColors.value = "";
+      formSizes.value = "";
+      formDesc.value = "";
+      formDetails.value = "";
+      formPromo.checked = false;
+      formImage.value = "";
+      formImagePos.value = "center 38%";
+    }
 
-  const slugify = (s) =>
-    String(s || "producto")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "producto";
+    // Llenar categorías en el select
+    const allCats = getAllCategories();
+    formCategory.innerHTML = allCats.map(c => `<option value="${c}">${c}</option>`).join("");
 
+    productModal.style.display = "block";
+    modalBackdrop.hidden = false;
+  }
+
+  function closeModal() {
+    productModal.hidden = true;
+    productModal.style.display = "none";
+    modalBackdrop.hidden = true;
+    document.body.style.overflow = "";
+    resetForm();
+  }
+
+  function resetForm() {
+    formId.value = "";
+    productForm.reset();
+    formImagePos.value = "center 38%";
+    // ReLlenar categorías vacías
+    const catEl = document.getElementById("formCategory");
+    if (catEl) {
+      const allCats = getAllCategories();
+      catEl.innerHTML = allCats.map(c => `<option value="${c}"></option>`).join("");
+    }
+  }
+
+  // --- Helper: obtener categorías (de products + storage) ---
+  function getAllCategories() {
+    const storedCats = JSON.parse(localStorage.getItem(CAT_KEY) || "[]");
+    const productCats = [...new Set(getProducts().map((p) => p.category).filter(Boolean))];
+    return [...new Set([...storedCats, ...productCats])];
+  }
+
+  // --- Producto from form ---
   function productFromForm() {
-    const id = document.getElementById("f-id").value || slugify(document.getElementById("f-name").value);
-    const colors = splitList(document.getElementById("f-colors").value);
-    const sizes = splitList(document.getElementById("f-sizes").value);
-    const details = splitList(document.getElementById("f-details").value);
-    const images = document.getElementById("f-image").value
-      ? [document.getElementById("f-image").value]
-      : [];
+    const id = formId.value || slugify(formName.value);
+    const colors = formColors.value.split(","").map(s => s.trim()).filter(Boolean) || ["Unico"];
+    const sizes = formSizes.value.split(","").map(s => s.trim()).filter(Boolean) || ["U"];
+    const details = formDetails.value.split(","").map(s => s.trim()).filter(Boolean) || ["Novedad"];
+    const images = formImage.value ? [formImage.value] : ["assets/products/canva/p6-1.jpg"];
     return {
       id,
-      name: document.getElementById("f-name").value.trim(),
-      category: document.getElementById("f-category").value.trim(),
-      price: num(document.getElementById("f-price").value),
-      oldPrice: num(document.getElementById("f-oldPrice").value),
-      promo: document.getElementById("f-promo").checked,
-      tag: document.getElementById("f-tag").value.trim() || null,
+      name: formName.value.trim(),
+      category: formCategory.value.trim(),
+      price: formPrice.value !== "" ? Number(formPrice.value) : null,
+      oldPrice: formOldPrice.value !== "" ? Number(formOldPrice.value) : null,
+      promo: formPromo.checked,
+      tag: formTag.value.trim() || null,
       colors: colors.length ? colors : ["Unico"],
       sizes: sizes.length ? sizes : ["U"],
-      description: document.getElementById("f-desc").value.trim(),
+      description: formDesc.value.trim(),
       details: details.length ? details : ["Novedad"],
       images: images.length ? images : ["assets/products/canva/p6-1.jpg"],
-      imagePos: document.getElementById("f-imagePos").value.trim() || "center 38%",
+      imagePos: formImagePos.value || "center 38%",
     };
   }
 
-  function fillEditor(product) {
-    document.getElementById("f-id").value = product.id || "";
-    document.getElementById("f-name").value = product.name || "";
-    document.getElementById("f-category").value = product.category || "";
-    document.getElementById("f-price").value = product.price == null ? "" : String(product.price);
-    document.getElementById("f-oldPrice").value = product.oldPrice == null ? "" : String(product.oldPrice);
-    document.getElementById("f-tag").value = product.tag || "";
-    document.getElementById("f-image").value = (product.images && product.images[0]) || "";
-    document.getElementById("f-imagePos").value = product.imagePos || "center 38%";
-    document.getElementById("f-colors").value = (product.colors || []).join(", ");
-    document.getElementById("f-sizes").value = (product.sizes || []).join(", ");
-    document.getElementById("f-desc").value = product.description || "";
-    document.getElementById("f-details").value = (product.details || []).join(", ");
-    document.getElementById("f-promo").checked = !!product.promo;
-  }
-
+  // --- renderList ---
   function renderList() {
     const list = getProducts();
     if (!list.length) {
-      listEl.innerHTML = '<p class="admin-empty">No hay productos todavia.</p>';
+      adminList.innerHTML = '<p class="admin-empty">No hay productos todavia.</p>';
       return;
     }
-    listEl.innerHTML = list
+    adminList.innerHTML = list
       .map((p) => {
         const promo = p.promo ? `<span class="admin-badge">PROMO</span>` : "";
         const cat = p.category || "";
@@ -113,7 +158,6 @@
         const img = p.images && p.images[0] ? p.images[0] : "";
         return `
           <div class="admin-card" data-id="${p.id}">
-            <button type="button" class="btn btn--small admin-card-del" data-action="del" data-id="${p.id}">Borrar</button>
             <button type="button" class="btn btn--small admin-card-edit" data-action="edit" data-id="${p.id}">Editar</button>
             <div class="admin-card-media">
               <img src="${img}" alt="${p.name}" loading="lazy" />
@@ -129,6 +173,7 @@
       .join("");
   }
 
+  // --- Stats ---
   function renderStats() {
     const list = getProducts();
     const promos = list.filter((p) => p.promo).length;
@@ -139,11 +184,18 @@
       <div class="admin-stat"><span class="admin-stat-num">${cats.size}</span><span class="admin-stat-label">Categorias</span></div>`;
   }
 
+  // --- Refresh ---
   function refreshAll() {
     renderStats();
     renderList();
+    // Actualizar select en modal si está abierto
+    if (!productModal.hidden) {
+      const allCats = getAllCategories();
+      formCategory.innerHTML = allCats.map(c => `<option value="${c}"></option>`).join("");
+    }
   }
 
+  // --- Boot ---
   function showPanel() {
     authScreen.hidden = true;
     panel.hidden = false;
@@ -153,113 +205,61 @@
   function showAuth() {
     panel.hidden = true;
     authScreen.hidden = false;
+    closeModal();
   }
 
   function boot() {
     if (isAuthed()) showPanel();
     else showAuth();
-    refreshAll();
 
-    // Categorías: desde productos + las guardadas en storage
-    const storedCats = JSON.parse(localStorage.getItem(CAT_KEY) || "[]");
-    const productCats = [...new Set(getProducts().map((p) => p.category).filter(Boolean))];
-    const allCats = [...new Set([...storedCats, ...productCats])];
-
-    const catEl = document.getElementById("adminCategories");
-    if (catEl) {
-      catEl.innerHTML = allCats.map((c) => `<option value="${c}"></option>`).join("");
-    }
-
-    // Botón agregar categoría
-    const addCategoryBtn = document.getElementById("addCategory");
-    if (addCategoryBtn) {
-      addCategoryBtn.addEventListener("click", () => {
-        const val = document.getElementById("newCategory").value.trim();
-        if (!val) return;
-        const cats = JSON.parse(localStorage.getItem(CAT_KEY) || "[]");
-        if (!cats.includes(val)) cats.push(val);
-        localStorage.setItem(CAT_KEY, JSON.stringify(cats));
-        // Actualizar DOM al instante
-        if (catEl) {
-          const opt = document.createElement("option");
-          opt.value = val;
-          opt.textContent = val;
-          catEl.appendChild(opt);
-        }
-        document.getElementById("newCategory").value = "";
-      });
-    }
-  }
-
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const user = document.getElementById("adminUser").value.trim();
-    const pass = document.getElementById("adminPass").value;
-    if (!doLogin(user, pass)) {
-      adminError.hidden = false;
-      return;
-    }
-    localStorage.setItem(AUTH_KEY, "1");
-    showPanel();
-  });
-
-  logoutBtn.addEventListener("click", () => {
-    doLogout();
-    location.reload();
-  });
-
-  listEl.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-action]");
-    if (!btn) return;
-    const id = btn.dataset.id;
-    const list = getProducts();
-    if (btn.dataset.action === "edit") {
-      const p = list.find((x) => x.id === id);
-      if (!p) return;
-      fillEditor(p);
-      editorTitle.textContent = `Editando: ${p.name}`;
-      editorForm.hidden = false;
-    } else if (btn.dataset.action === "del") {
-      saveProducts(list.filter((x) => x.id !== id));
-      refreshAll();
-    }
-  });
-
-  saveBtn.addEventListener("click", () => {
-    const product = productFromForm();
-    if (!product.name) return;
-    const list = getProducts();
-    const idx = list.findIndex((x) => x.id === product.id);
-    if (idx >= 0) list[idx] = product;
-    else list.push(product);
-    saveProducts(list);
-    refreshAll();
-    editorForm.hidden = true;
-  });
-
-  cancelBtn.addEventListener("click", () => {
-    editorForm.hidden = true;
-  });
-
-  newBtn.addEventListener("click", () => {
-    fillEditor({
-      id: slugify("admin-" + Date.now().toString(36)),
-      name: "",
-      category: "",
-      price: null,
-      oldPrice: null,
-      promo: false,
-      tag: "",
-      colors: ["Unico"],
-      sizes: ["U"],
-      description: "",
-      details: [],
-      images: ["assets/products/canva/p6-1.jpg"],
-      imagePos: "center 38%",
+    // Eventos
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const user = document.getElementById("adminUser").value.trim();
+      const pass = document.getElementById("adminPass").value;
+      if (!doLogin(user, pass)) {
+        adminError.hidden = false;
+        return;
+      }
+      localStorage.setItem(AUTH_KEY, "1");
+      showPanel();
     });
-    editorTitle.textContent = "Nuevo producto";
-    editorForm.hidden = false;
-  });
+
+    logoutBtn.addEventListener("click", () => {
+      doLogout();
+      location.reload();
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    productModal.addEventListener("click", (e) => {
+      if (e.target === productModal) closeModal();
+    });
+
+    // Form submit
+    productForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const product = productFromForm();
+      if (!product.name) return;
+      const list = getProducts();
+      const idx = list.findIndex((x) => x.id === product.id);
+      if (idx >= 0) list[idx] = product;
+      else list.push(product);
+      saveProducts(list);
+      refreshAll();
+      closeModal();
+    });
+
+    // Inicial
+    if (isAuthed()) showPanel();
+    else showAuth();
+
+    // Cargar categorías iniciales
+    const allCats = getAllCategories();
+    const catEl = document.getElementById("formCategory");
+    if (catEl) catEl.innerHTML = allCats.map(c => `<option value="${c}"></option>`).join("");
+    const catEl2 = document.getElementById("adminCategories");
+    if (catEl2) catEl2.innerHTML = allCats.map(c => `<option value="${c}"></option>`).join("");
+  }
 
   document.addEventListener("DOMContentLoaded", boot);
 })();
