@@ -108,15 +108,20 @@
       .map((p) => {
         const promo = p.promo ? `<span class="admin-badge">PROMO</span>` : "";
         const cat = p.category || "";
+        const old = p.oldPrice ? `<span class="admin-old">Antes: $${p.oldPrice}</span>` : "";
+        const img = p.images && p.images[0] ? p.images[0] : "";
         return `
-          <div class="admin-item" data-id="${p.id}">
-            <div class="admin-item-main">
+          <div class="admin-card" data-id="${p.id}">
+            <button type="button" class="btn btn--small admin-card-del" data-action="del" data-id="${p.id}">Borrar</button>
+            <button type="button" class="btn btn--small admin-card-edit" data-action="edit" data-id="${p.id}">Editar</button>
+            <div class="admin-card-media">
+              <img src="${img}" alt="${p.name}" loading="lazy" />
+              ${promo}
+            </div>
+            <div class="admin-card-body">
               <strong>${p.name}</strong>
               <span>${cat} · ${p.price == null ? "Precio por WhatsApp" : "$" + p.price} ${promo}</span>
-            </div>
-            <div class="admin-item-actions">
-              <button type="button" class="btn btn--small" data-action="edit" data-id="${p.id}">Editar</button>
-              <button type="button" class="btn btn--small btn--danger" data-action="del" data-id="${p.id}">Borrar</button>
+              ${old}
             </div>
           </div>`;
       })
