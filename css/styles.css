@@ -2036,6 +2036,14 @@ ul {
   margin: 0.15rem 0 0.7rem;
 }
 
+.footer__by {
+  margin-top: 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* Galería del modal */
 .modal__media {
   position: relative;
